@@ -5,6 +5,10 @@ import App from './App'
 
 import './api/server'
 
+import store from './store'
+
+console.log(store.getState())
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
