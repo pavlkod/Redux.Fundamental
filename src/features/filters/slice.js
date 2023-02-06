@@ -1,7 +1,13 @@
 import { STATUS_CHANGE } from '../../constants'
 
+export const StatusFilters = {
+  All: 'all',
+  Active: 'active',
+  Completed: 'completed',
+}
+
 const initialState = {
-  status: 'ALL',
+  status: 'all',
   colors: [],
 }
 
