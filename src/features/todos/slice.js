@@ -1,19 +1,13 @@
-import { ADD_TODO, TOGGLE_TODO } from '../../constants'
-import { nextId } from '../../utils'
+import { client } from 'api/client'
+import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
+import { add_todo, fetch_todos } from './actions'
 
-const initialState = [
-  { id: 0, text: 'Learn React', completed: true },
-  { id: 1, text: 'Learn Redux', completed: false, color: 'purple' },
-  { id: 2, text: 'Build something fun!', completed: false, color: 'blue' },
-]
+const initialState = []
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case ADD_TODO: {
-      return [
-        ...state,
-        { id: nextId(state), text: action.payload, completed: false },
-      ]
+      return [...state, action.payload]
     }
     case TOGGLE_TODO: {
       return state.map((todo) => {
@@ -23,7 +17,20 @@ export default function reducer(state = initialState, action) {
         return todo
       })
     }
+    case FETCH_TODOS: {
+      return action.payload
+    }
     default:
       return state
   }
+}
+
+export const fetchTodos = async (dispatch) => {
+  const response = await client.get('/fakeApi/todos/')
+  dispatch(fetch_todos(response.todos))
+}
+
+export const addTodo = (text) => async (dispatch) => {
+  const response = await client.post('/fakeApi/todos/', { todo: { text } })
+  dispatch(add_todo(response.todo))
 }
