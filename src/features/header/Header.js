@@ -1,23 +1,25 @@
+import { addTodo } from 'features/todos/slice'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { add_todo } from '../todos/actions'
 
 const Header = () => {
   const dispatch = useDispatch()
+
   const [text, setText] = useState('')
 
   const handleChange = (e) => setText(e.target.value)
-  const addTodo = (e) => {
+
+  const addTodoHandler = (e) => {
     e.preventDefault()
     if (text.trim()) {
       setText('')
-      dispatch(add_todo(text))
+      dispatch(addTodo(text))
     }
   }
 
   return (
     <header className="header">
-      <form style={{ flex: 1 }} onSubmit={addTodo}>
+      <form style={{ flex: 1 }} onSubmit={addTodoHandler}>
         <input
           className="new-todo"
           placeholder="What needs to be done?"
