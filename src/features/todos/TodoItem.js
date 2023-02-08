@@ -1,10 +1,10 @@
-import React, { memo } from 'react'
+import React from 'react'
 
 import { ReactComponent as TimesSolid } from './times-solid.svg'
 
 import { availableColors, capitalize } from '../filters/colors'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggle_todo } from './actions'
+import { change_color, toggle_todo } from './actions'
 
 const selectTodoById = (state, todoId) => {
   return state.todos.find((todo) => todo.id === todoId)
@@ -20,7 +20,7 @@ const TodoListItem = ({ todoId }) => {
   }
 
   const handleColorChanged = (e) => {
-    // onColorChange(e.target.value)
+    dispatch(change_color(todoId, e.target.value))
   }
 
   const colorOptions = availableColors.map((c) => (
