@@ -1,4 +1,5 @@
 import { client } from 'api/client'
+import { CHANGE_COLOR_TODO } from 'constants'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
 import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
@@ -16,6 +17,15 @@ export default function reducer(state = initialState, action) {
       return state.map((todo) => {
         if (todo.id === action.payload) {
           return { ...todo, completed: !todo.completed }
+        }
+        return todo
+      })
+    }
+    case CHANGE_COLOR_TODO: {
+      return state.map((todo) => {
+        const { id, color } = action.payload
+        if (todo.id === id) {
+          return { ...todo, color }
         }
         return todo
       })
@@ -40,11 +50,14 @@ export const addTodo = (text) => async (dispatch) => {
 
 export const selectTodosByFilter = createSelector(
   (state) => state.todos,
-  (state) => state.filters.status,
-  (todos, status) =>
-    status === StatusFilters.All
-      ? todos
-      : todos.filter((todo) => todo.completed)
+  (state) => state.filters,
+  (todos, filters) => {
+    const { status, colors } = filters
+    if (status === StatusFilters.All) {
+      return todos
+    }
+    return todos.filter((todo) => todo.completed)
+  }
 )
 
 export const selectTodoIds = createSelector(
