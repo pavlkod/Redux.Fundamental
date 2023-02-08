@@ -20,3 +20,10 @@ export default function reducer(state = initialState, action) {
       return state
   }
 }
+
+export const statusChange = (status) => {
+  return {
+    type: STATUS_CHANGE,
+    payload: status,
+  }
+}
