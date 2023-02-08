@@ -1,5 +1,7 @@
 import { client } from 'api/client'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
+import { shallowEqual } from 'react-redux'
+import { createSelector } from 'reselect'
 import { add_todo, fetch_todos } from './actions'
 
 const initialState = []
@@ -34,3 +36,13 @@ export const addTodo = (text) => async (dispatch) => {
   const response = await client.post('/fakeApi/todos/', { todo: { text } })
   dispatch(add_todo(response.todo))
 }
+
+export const selectTodoIds = createSelector(
+  (state) => state.todos,
+  (todos) => todos.map((todo) => todo.id),
+  {
+    memoizeOptions: {
+      resultEqualityCheck: shallowEqual,
+    },
+  }
+)
