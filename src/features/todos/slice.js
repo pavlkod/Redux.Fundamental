@@ -1,5 +1,6 @@
 import { client } from 'api/client'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
+import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
 import { createSelector } from 'reselect'
 import { add_todo, fetch_todos } from './actions'
@@ -37,8 +38,17 @@ export const addTodo = (text) => async (dispatch) => {
   dispatch(add_todo(response.todo))
 }
 
-export const selectTodoIds = createSelector(
+export const selectTodosByFilter = createSelector(
   (state) => state.todos,
+  (state) => state.filters.status,
+  (todos, status) =>
+    status === StatusFilters.All
+      ? todos
+      : todos.filter((todo) => todo.completed)
+)
+
+export const selectTodoIds = createSelector(
+  selectTodosByFilter,
   (todos) => todos.map((todo) => todo.id),
   {
     memoizeOptions: {
