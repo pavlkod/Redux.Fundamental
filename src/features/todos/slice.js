@@ -48,15 +48,28 @@ export const addTodo = (text) => async (dispatch) => {
   dispatch(add_todo(response.todo))
 }
 
+export const selectTodos = (state) => state.todos
+
+export const selectTodoById = (state, id) =>
+  selectTodos(state).find((todo) => todo.id === id)
+
 export const selectTodosByFilter = createSelector(
-  (state) => state.todos,
+  selectTodos,
   (state) => state.filters,
   (todos, filters) => {
     const { status, colors } = filters
-    if (status === StatusFilters.All) {
+    const showAll = status === StatusFilters.All
+    const showCompleted = status === StatusFilters.Completed
+
+    if (showAll && colors.length === 0) {
       return todos
     }
-    return todos.filter((todo) => todo.completed)
+    return todos.filter((todo) => {
+      const matchedByStatus = showAll || todo.completed === showCompleted
+      const matchedByColor = colors.length === 0 || colors.includes(todo.color)
+
+      return matchedByStatus && matchedByColor
+    })
   }
 )
 
