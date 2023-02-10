@@ -6,32 +6,41 @@ import { shallowEqual } from 'react-redux'
 import { createSelector } from 'reselect'
 import { add_todo, fetch_todos } from './actions'
 
-const initialState = []
+const initialState = {
+  status: 'idle',
+  entities: [],
+}
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case ADD_TODO: {
-      return [...state, action.payload]
+      return { ...state, entities: [...state.entities, action.payload] }
     }
     case TOGGLE_TODO: {
-      return state.map((todo) => {
-        if (todo.id === action.payload) {
-          return { ...todo, completed: !todo.completed }
-        }
-        return todo
-      })
+      return {
+        ...state,
+        entities: state.entities.map((todo) => {
+          if (todo.id === action.payload) {
+            return { ...todo, completed: !todo.completed }
+          }
+          return todo
+        }),
+      }
     }
     case CHANGE_COLOR_TODO: {
-      return state.map((todo) => {
-        const { id, color } = action.payload
-        if (todo.id === id) {
-          return { ...todo, color }
-        }
-        return todo
-      })
+      return {
+        ...state,
+        entities: state.entities.map((todo) => {
+          const { id, color } = action.payload
+          if (todo.id === id) {
+            return { ...todo, color }
+          }
+          return todo
+        }),
+      }
     }
     case FETCH_TODOS: {
-      return action.payload
+      return { ...state, entities: [...state.entities, ...action.payload] }
     }
     default:
       return state
@@ -48,7 +57,7 @@ export const addTodo = (text) => async (dispatch) => {
   dispatch(add_todo(response.todo))
 }
 
-export const selectTodos = (state) => state.todos
+export const selectTodos = (state) => state.todos.entities
 
 export const selectTodoById = (state, id) =>
   selectTodos(state).find((todo) => todo.id === id)
