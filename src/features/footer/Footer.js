@@ -1,4 +1,4 @@
-import { statusChange } from 'features/filters/slice'
+import { colorChange, statusChange } from 'features/filters/slice'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ColorFilters from './ColorFilters'
@@ -7,14 +7,13 @@ import RemainingTodos from './RemainingTodos'
 import StatusFilter from './StatusFilter'
 
 const Footer = () => {
-  const { colors, status } = useSelector((state) => state.filters)
   const dispatch = useDispatch()
+  const { colors, status } = useSelector((state) => state.filters)
 
   const onColorChange = (color, changeType) => {
-    console.log('Color change: ', { color, changeType })
+    dispatch(colorChange(color, changeType))
   }
   const onStatusChange = (status) => {
-    console.log('Status change: ', status)
     dispatch(statusChange(status))
   }
 
