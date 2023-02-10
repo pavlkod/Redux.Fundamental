@@ -1,4 +1,9 @@
-import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from '../../constants'
+import {
+  ADD_TODO,
+  CHANGE_COLOR_TODO,
+  FETCH_TODOS,
+  TOGGLE_TODO,
+} from '../../constants'
 
 export const add_todo = (text) => {
   return {
@@ -16,5 +21,11 @@ export const toggle_todo = (id) => {
   return {
     type: TOGGLE_TODO,
     payload: id,
+  }
+}
+export const change_color = (id, color) => {
+  return {
+    type: CHANGE_COLOR_TODO,
+    payload: { id, color },
   }
 }
