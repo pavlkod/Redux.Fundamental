@@ -2,6 +2,7 @@ import {
   ADD_TODO,
   CHANGE_COLOR_TODO,
   FETCH_TODOS,
+  REMOVE_TODO,
   TOGGLE_TODO,
 } from '../../constants'
 
@@ -20,6 +21,12 @@ export const fetch_todos = (todos) => {
 export const toggle_todo = (id) => {
   return {
     type: TOGGLE_TODO,
+    payload: id,
+  }
+}
+export const remove_todo = (id) => {
+  return {
+    type: REMOVE_TODO,
     payload: id,
   }
 }
