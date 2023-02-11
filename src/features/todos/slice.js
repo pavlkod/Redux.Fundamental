@@ -1,5 +1,7 @@
 import { client } from 'api/client'
+import { DELETE_TODO } from 'constants'
 import { CHANGE_COLOR_TODO } from 'constants'
+import { REMOVE_TODO } from 'constants'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
 import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
@@ -41,6 +43,12 @@ export default function reducer(state = initialState, action) {
     }
     case FETCH_TODOS: {
       return { ...state, entities: [...state.entities, ...action.payload] }
+    }
+    case REMOVE_TODO: {
+      return {
+        ...state,
+        entities: state.entities.filter((todo) => todo.id !== action.payload),
+      }
     }
     default:
       return state
