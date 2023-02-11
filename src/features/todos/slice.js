@@ -10,7 +10,7 @@ import { add_todo, fetch_todos, loading } from './actions'
 
 const initialState = {
   status: 'idle',
-  entities: [],
+  entities: {},
 }
 
 export default function reducer(state = initialState, action) {
@@ -19,42 +19,50 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: 'loading' }
     }
     case ADD_TODO: {
-      return { ...state, entities: [...state.entities, action.payload] }
+      const todo = action.payload
+      return { ...state, entities: { ...state.entities, [todo.id]: todo } }
     }
     case TOGGLE_TODO: {
+      const todoId = action.payload
+      const todo = state.entities[todoId]
       return {
         ...state,
-        entities: state.entities.map((todo) => {
-          if (todo.id === action.payload) {
-            return { ...todo, completed: !todo.completed }
-          }
-          return todo
-        }),
+        entities: {
+          ...state.entities,
+          [todoId]: {
+            ...todo,
+            completed: !todo.completed,
+          },
+        },
       }
     }
     case CHANGE_COLOR_TODO: {
+      const { id, color } = action.payload
+      const todo = state.entities[id]
       return {
         ...state,
-        entities: state.entities.map((todo) => {
-          const { id, color } = action.payload
-          if (todo.id === id) {
-            return { ...todo, color }
-          }
-          return todo
-        }),
+        entities: {
+          ...state.entities,
+          [id]: {
+            ...todo,
+            color,
+          },
+        },
       }
     }
     case FETCH_TODOS: {
       return {
         ...state,
         status: 'idle',
-        entities: [...state.entities, ...action.payload],
+        entities: { ...state.entities, ...action.payload },
       }
     }
     case REMOVE_TODO: {
+      const todos = { ...state.entities }
+      delete todos[action.payload]
       return {
         ...state,
-        entities: state.entities.filter((todo) => todo.id !== action.payload),
+        entities: todos,
       }
     }
     default:
@@ -75,8 +83,7 @@ export const addTodo = (text) => async (dispatch) => {
 
 export const selectTodos = (state) => state.todos.entities
 
-export const selectTodoById = (state, id) =>
-  selectTodos(state).find((todo) => todo.id === id)
+export const selectTodoById = (state, id) => selectTodos(state)[id]
 
 export const selectTodosByFilter = createSelector(
   selectTodos,
@@ -89,7 +96,7 @@ export const selectTodosByFilter = createSelector(
     if (showAll && colors.length === 0) {
       return todos
     }
-    return todos.filter((todo) => {
+    return Object.values(todos).filter((todo) => {
       const matchedByStatus = showAll || todo.completed === showCompleted
       const matchedByColor = colors.length === 0 || colors.includes(todo.color)
 
@@ -100,7 +107,7 @@ export const selectTodosByFilter = createSelector(
 
 export const selectTodoIds = createSelector(
   selectTodosByFilter,
-  (todos) => todos.map((todo) => todo.id),
+  (todos) => Object.keys(todos),
   {
     memoizeOptions: {
       resultEqualityCheck: shallowEqual,
