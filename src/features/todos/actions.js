@@ -2,6 +2,7 @@ import {
   ADD_TODO,
   CHANGE_COLOR_TODO,
   FETCH_TODOS,
+  LOADING_TODO,
   REMOVE_TODO,
   TOGGLE_TODO,
 } from '../../constants'
@@ -34,5 +35,10 @@ export const change_color = (id, color) => {
   return {
     type: CHANGE_COLOR_TODO,
     payload: { id, color },
+  }
+}
+export const loading = () => {
+  return {
+    type: LOADING_TODO,
   }
 }
