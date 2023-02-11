@@ -1,11 +1,12 @@
 import { client } from 'api/client'
 import { CHANGE_COLOR_TODO } from 'constants'
 import { REMOVE_TODO } from 'constants'
+import { LOADING_TODO } from 'constants'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
 import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
 import { createSelector } from 'reselect'
-import { add_todo, fetch_todos } from './actions'
+import { add_todo, fetch_todos, loading } from './actions'
 
 const initialState = {
   status: 'idle',
@@ -14,6 +15,9 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case LOADING_TODO: {
+      return { ...state, status: 'loading' }
+    }
     case ADD_TODO: {
       return { ...state, entities: [...state.entities, action.payload] }
     }
@@ -41,7 +45,11 @@ export default function reducer(state = initialState, action) {
       }
     }
     case FETCH_TODOS: {
-      return { ...state, entities: [...state.entities, ...action.payload] }
+      return {
+        ...state,
+        status: 'idle',
+        entities: [...state.entities, ...action.payload],
+      }
     }
     case REMOVE_TODO: {
       return {
@@ -55,6 +63,7 @@ export default function reducer(state = initialState, action) {
 }
 
 export const fetchTodos = async (dispatch) => {
+  dispatch(loading())
   const response = await client.get('/fakeApi/todos/')
   dispatch(fetch_todos(response.todos))
 }
