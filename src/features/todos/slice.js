@@ -1,5 +1,4 @@
 import { client } from 'api/client'
-import { DELETE_TODO } from 'constants'
 import { CHANGE_COLOR_TODO } from 'constants'
 import { REMOVE_TODO } from 'constants'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
