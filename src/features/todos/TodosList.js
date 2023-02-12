@@ -6,10 +6,19 @@ import TodoItem from './TodoItem'
 const TodosList = () => {
   const dispatch = useDispatch()
   const todoIds = useSelector(selectTodoIds)
+  const status = useSelector((state) => state.todos.status)
 
   useEffect(() => {
     dispatch(fetchTodos)
   }, [dispatch])
+
+  if (status === 'loading') {
+    return (
+      <div className="todo-list">
+        <div className="loader" />
+      </div>
+    )
+  }
 
   const renderedTodos = todoIds.map((id) => <TodoItem key={id} todoId={id} />)
 
