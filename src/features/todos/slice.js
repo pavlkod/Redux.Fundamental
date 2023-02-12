@@ -2,6 +2,8 @@ import { client } from 'api/client'
 import { CHANGE_COLOR_TODO } from 'constants'
 import { REMOVE_TODO } from 'constants'
 import { LOADING_TODO } from 'constants'
+import { REMOVE_COMPLETED_TODO } from 'constants'
+import { COMPLETE_ALL_TODO } from 'constants'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
 import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
@@ -64,6 +66,25 @@ export default function reducer(state = initialState, action) {
         ...state,
         entities: todos,
       }
+    }
+    case COMPLETE_ALL_TODO: {
+      const newState = { ...state.entities }
+      Object.values(newState).forEach((todo) => {
+        newState[todo.id] = {
+          ...todo,
+          completed: true,
+        }
+      })
+      return { ...state, entities: newState }
+    }
+    case REMOVE_COMPLETED_TODO: {
+      // const newState = { ...state.entities }
+      const newState = Object.fromEntries(
+        Object.entries(state.entities).filter(
+          ([key, value]) => !value.completed
+        )
+      )
+      return { ...state, entities: newState }
     }
     default:
       return state
