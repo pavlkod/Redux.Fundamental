@@ -7,7 +7,7 @@ import { COMPLETE_ALL_TODO } from 'constants'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
 import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
-import { createSelector } from 'reselect'
+import { createSelector } from '@reduxjs/toolkit/'
 import { add_todo, fetch_todos, loading } from './actions'
 
 const initialState = {
