@@ -7,18 +7,34 @@ import { COMPLETE_ALL_TODO } from 'constants'
 import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
 import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
-import { createSelector } from '@reduxjs/toolkit/'
+import { createSelector, createSlice } from '@reduxjs/toolkit/'
 import { add_todo, fetch_todos, loading } from './actions'
 
 const initialState = {
   status: 'idle',
-  entities: {},
+  entities: [],
 }
 
-export default function reducer(state = initialState, action) {
+const todosSlice = createSlice({
+  name: 'todos',
+  initialState,
+  reducers: {
+    loading(state) {
+      state.status = 'loading'
+    },
+    todoAdded(state, action) {
+      state.entities.push(action.payload)
+    },
+    async fetchTodos(state, action) {},
+  },
+})
+
+export const { loading } = todosSlice.actions
+
+export const todosReducer = todosSlice.reducer
+/*
   switch (action.type) {
     case LOADING_TODO: {
-      return { ...state, status: 'loading' }
     }
     case ADD_TODO: {
       const todo = action.payload
@@ -90,6 +106,7 @@ export default function reducer(state = initialState, action) {
       return state
   }
 }
+*/
 
 export const fetchTodos = async (dispatch) => {
   dispatch(loading())
