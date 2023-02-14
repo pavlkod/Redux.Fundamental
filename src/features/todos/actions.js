@@ -1,8 +1,10 @@
 import {
   ADD_TODO,
   CHANGE_COLOR_TODO,
+  COMPLETE_ALL_TODO,
   FETCH_TODOS,
   LOADING_TODO,
+  REMOVE_COMPLETED_TODO,
   REMOVE_TODO,
   TOGGLE_TODO,
 } from '../../constants'
@@ -40,5 +42,15 @@ export const change_color = (id, color) => {
 export const loading = () => {
   return {
     type: LOADING_TODO,
+  }
+}
+export const mark_completed = () => {
+  return {
+    type: COMPLETE_ALL_TODO,
+  }
+}
+export const remove_completed = () => {
+  return {
+    type: REMOVE_COMPLETED_TODO,
   }
 }
