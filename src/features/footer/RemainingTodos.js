@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux'
 
 const RemainingTodos = () => {
   const count = useSelector(
-    (state) => selectTodos(state).filter((todo) => !todo.completed).length
+    (state) =>
+      Object.values(selectTodos(state)).filter((todo) => !todo.completed).length
   )
   const suffix = count === 1 ? '' : 's'
 
