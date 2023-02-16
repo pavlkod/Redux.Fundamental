@@ -4,7 +4,7 @@ import { ReactComponent as TimesSolid } from './times-solid.svg'
 
 import { availableColors, capitalize } from '../filters/colors'
 import { useDispatch, useSelector } from 'react-redux'
-import { change_color, toggle_todo } from './actions'
+import { change_color, remove_todo, toggle_todo } from './actions'
 import { selectTodoById } from './slice'
 
 const TodoListItem = ({ todoId }) => {
@@ -18,6 +18,10 @@ const TodoListItem = ({ todoId }) => {
 
   const handleColorChanged = (e) => {
     dispatch(change_color(todoId, e.target.value))
+  }
+
+  const removeTodo = (e) => {
+    dispatch(remove_todo(todoId))
   }
 
   const colorOptions = availableColors.map((c) => (
@@ -51,7 +55,7 @@ const TodoListItem = ({ todoId }) => {
             <option value=""></option>
             {colorOptions}
           </select>
-          <button className="destroy">
+          <button className="destroy" onClick={removeTodo}>
             <TimesSolid />
           </button>
         </div>
