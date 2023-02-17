@@ -8,7 +8,7 @@ import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
 import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
 import { createSelector, createSlice } from '@reduxjs/toolkit/'
-import { add_todo, fetch_todos, loading } from './actions'
+// import { add_todo, fetch_todos, loading } from './actions'
 
 const initialState = {
   status: 'idle',
@@ -107,7 +107,7 @@ export const todosReducer = todosSlice.reducer
   }
 }
 */
-
+/*
 export const fetchTodos = async (dispatch) => {
   dispatch(loading())
   const response = await client.get('/fakeApi/todos/')
@@ -152,3 +152,4 @@ export const selectTodoIds = createSelector(
     },
   }
 )
+*/
