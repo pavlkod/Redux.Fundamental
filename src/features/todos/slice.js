@@ -12,7 +12,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit/'
 
 const initialState = {
   status: 'idle',
-  entities: [],
+  entities: {},
 }
 
 const todosSlice = createSlice({
@@ -23,7 +23,13 @@ const todosSlice = createSlice({
       state.status = 'loading'
     },
     todoAdded(state, action) {
-      state.entities.push(action.payload)
+      const todo = action.payload
+      state.entities[todo.id] = todo
+    },
+    todoAdded(state, action) {
+      const todoId = action.payload
+      const todo = state.entities[todoId]
+      todo.completed = !todo.completed
     },
     async fetchTodos(state, action) {},
   },
