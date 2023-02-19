@@ -26,16 +26,27 @@ const todosSlice = createSlice({
       const todo = action.payload
       state.entities[todo.id] = todo
     },
-    todoAdded(state, action) {
+    todoToggled(state, action) {
       const todoId = action.payload
       const todo = state.entities[todoId]
       todo.completed = !todo.completed
+    },
+    changeColor: {
+      reducer(state, action) {
+        const { id, color } = action.payload
+        state.entities[id].color = color
+      },
+      prepare(todoId, color) {
+        return {
+          payload: { todoId, color },
+        }
+      },
     },
     async fetchTodos(state, action) {},
   },
 })
 
-export const { loading } = todosSlice.actions
+export const { loading, todoAdded, todoToggled } = todosSlice.actions
 
 export const todosReducer = todosSlice.reducer
 /*
