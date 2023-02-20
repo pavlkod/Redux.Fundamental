@@ -1,4 +1,4 @@
-import { addTodo } from 'features/todos/slice'
+// import { addTodo } from 'features/todos/slice'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -15,7 +15,7 @@ const Header = () => {
     if (text.trim()) {
       setText('')
       setStatus('loading')
-      await dispatch(addTodo(text))
+      // await dispatch(addTodo(text))
       setStatus('idle')
     }
   }
