@@ -42,6 +42,9 @@ const todosSlice = createSlice({
         }
       },
     },
+    todoRemoved(state, action) {
+      delete state.entities[action.payload]
+    },
     async fetchTodos(state, action) {},
   },
 })
