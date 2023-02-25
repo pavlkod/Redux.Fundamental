@@ -1,19 +1,21 @@
 import { client } from 'api/client'
-import { CHANGE_COLOR_TODO } from 'constants'
-import { REMOVE_TODO } from 'constants'
-import { LOADING_TODO } from 'constants'
-import { REMOVE_COMPLETED_TODO } from 'constants'
-import { COMPLETE_ALL_TODO } from 'constants'
-import { ADD_TODO, FETCH_TODOS, TOGGLE_TODO } from 'constants'
 import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
-import { createSelector, createSlice } from '@reduxjs/toolkit/'
-// import { add_todo, fetch_todos, loading } from './actions'
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from '@reduxjs/toolkit/'
 
 const initialState = {
   status: 'idle',
   entities: {},
 }
+
+export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
+  const response = await client.get('/fakeApi/todos/')
+  return response.todos
+})
 
 const todosSlice = createSlice({
   name: 'todos',
@@ -33,8 +35,8 @@ const todosSlice = createSlice({
     },
     changeColor: {
       reducer(state, action) {
-        const { id, color } = action.payload
-        state.entities[id].color = color
+        const { todoId, color } = action.payload
+        state.entities[todoId].color = color
       },
       prepare(todoId, color) {
         return {
@@ -53,6 +55,20 @@ const todosSlice = createSlice({
       state.entities = entitites
       state.status = 'idle'
     },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchTodos.fulfilled, (state, action) => {
+        const entitites = {}
+        action.payload.forEach((todo) => {
+          entitites[todo.id] = todo
+        })
+        state.entities = entitites
+        state.status = 'idle'
+      })
+      .addCase(fetchTodos.pending, (state) => {
+        state.status = 'loading'
+      })
   },
 })
 
@@ -142,11 +158,14 @@ switch (action.type) {
 }
 */
 
+/*
 export const fetchTodos = async (dispatch) => {
   dispatch(loading())
   const response = await client.get('/fakeApi/todos/')
   dispatch(todosAdded(response.todos))
 }
+*/
+
 /*
 export const addTodo = (text) => async (dispatch) => {
   const response = await client.post('/fakeApi/todos/', { todo: { text } })
@@ -180,7 +199,7 @@ export const selectTodosByFilter = createSelector(
 
 export const selectTodoIds = createSelector(
   selectTodosByFilter,
-  (todos) => Object.keys(todos),
+  (todos) => Object.values(todos).map((todo) => todo.id),
   {
     memoizeOptions: {
       resultEqualityCheck: shallowEqual,
