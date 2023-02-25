@@ -45,15 +45,28 @@ const todosSlice = createSlice({
     todoRemoved(state, action) {
       delete state.entities[action.payload]
     },
-    async fetchTodos(state, action) {},
+    todosAdded(state, action) {
+      const entitites = {}
+      action.payload.forEach((todo) => {
+        entitites[todo.id] = todo
+      })
+      state.entities = entitites
+    },
   },
 })
 
-export const { loading, todoAdded, todoToggled } = todosSlice.actions
+export const {
+  loading,
+  todoAdded,
+  todoToggled,
+  todoRemoved,
+  changeColor,
+  todosAdded,
+} = todosSlice.actions
 
 export const todosReducer = todosSlice.reducer
 /*
-  switch (action.type) {
+switch (action.type) {
     case LOADING_TODO: {
     }
     case ADD_TODO: {
@@ -127,13 +140,13 @@ export const todosReducer = todosSlice.reducer
   }
 }
 */
-/*
+
 export const fetchTodos = async (dispatch) => {
   dispatch(loading())
   const response = await client.get('/fakeApi/todos/')
-  dispatch(fetch_todos(response.todos))
+  dispatch(todosAdded(response.todos))
 }
-
+/*
 export const addTodo = (text) => async (dispatch) => {
   const response = await client.post('/fakeApi/todos/', { todo: { text } })
   dispatch(add_todo(response.todo))
