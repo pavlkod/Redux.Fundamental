@@ -51,6 +51,7 @@ const todosSlice = createSlice({
         entitites[todo.id] = todo
       })
       state.entities = entitites
+      state.status = 'idle'
     },
   },
 })
@@ -151,6 +152,7 @@ export const addTodo = (text) => async (dispatch) => {
   const response = await client.post('/fakeApi/todos/', { todo: { text } })
   dispatch(add_todo(response.todo))
 }
+*/
 
 export const selectTodos = (state) => state.todos.entities
 
@@ -185,4 +187,3 @@ export const selectTodoIds = createSelector(
     },
   }
 )
-*/
