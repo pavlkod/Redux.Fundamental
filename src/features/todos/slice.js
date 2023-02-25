@@ -17,6 +17,11 @@ export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   return response.todos
 })
 
+export const addTodo = createAsyncThunk('todos/addTodo', async (text) => {
+  const response = await client.post('/fakeApi/todos/', { todo: { text } })
+  return response.todo
+})
+
 const todosSlice = createSlice({
   name: 'todos',
   initialState,
@@ -69,6 +74,10 @@ const todosSlice = createSlice({
       .addCase(fetchTodos.pending, (state) => {
         state.status = 'loading'
       })
+      .addCase(addTodo.fulfilled, (state, action) => {
+        const todo = action.payload
+        state.entities[todo.id] = todo
+      })
   },
 })
 
@@ -83,56 +92,6 @@ export const {
 
 export const todosReducer = todosSlice.reducer
 /*
-switch (action.type) {
-    case LOADING_TODO: {
-    }
-    case ADD_TODO: {
-      const todo = action.payload
-      return { ...state, entities: { ...state.entities, [todo.id]: todo } }
-    }
-    case TOGGLE_TODO: {
-      const todoId = action.payload
-      const todo = state.entities[todoId]
-      return {
-        ...state,
-        entities: {
-          ...state.entities,
-          [todoId]: {
-            ...todo,
-            completed: !todo.completed,
-          },
-        },
-      }
-    }
-    case CHANGE_COLOR_TODO: {
-      const { id, color } = action.payload
-      const todo = state.entities[id]
-      return {
-        ...state,
-        entities: {
-          ...state.entities,
-          [id]: {
-            ...todo,
-            color,
-          },
-        },
-      }
-    }
-    case FETCH_TODOS: {
-      return {
-        ...state,
-        status: 'idle',
-        entities: { ...state.entities, ...action.payload },
-      }
-    }
-    case REMOVE_TODO: {
-      const todos = { ...state.entities }
-      delete todos[action.payload]
-      return {
-        ...state,
-        entities: todos,
-      }
-    }
     case COMPLETE_ALL_TODO: {
       const newState = { ...state.entities }
       Object.values(newState).forEach((todo) => {
@@ -152,25 +111,6 @@ switch (action.type) {
       )
       return { ...state, entities: newState }
     }
-    default:
-      return state
-  }
-}
-*/
-
-/*
-export const fetchTodos = async (dispatch) => {
-  dispatch(loading())
-  const response = await client.get('/fakeApi/todos/')
-  dispatch(todosAdded(response.todos))
-}
-*/
-
-/*
-export const addTodo = (text) => async (dispatch) => {
-  const response = await client.post('/fakeApi/todos/', { todo: { text } })
-  dispatch(add_todo(response.todo))
-}
 */
 
 export const selectTodos = (state) => state.todos.entities
