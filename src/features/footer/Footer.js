@@ -1,4 +1,6 @@
 import { colorChange, statusChange } from 'features/filters/slice'
+import { mark_completed, remove_completed } from 'features/todos/actions'
+import { markAllCompleted } from 'features/todos/slice'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ColorFilters from './ColorFilters'
@@ -16,13 +18,23 @@ const Footer = () => {
   const onStatusChange = (status) => {
     dispatch(statusChange(status))
   }
+  const setAllCompletedTodos = () => {
+    dispatch(markAllCompleted())
+  }
+  const removeCompletedTodos = () => {
+    dispatch(remove_completed())
+  }
 
   return (
     <footer className="footer">
       <div className="actions">
         <h5>Actions</h5>
-        <button className="button">Mark All Completed</button>
-        <button className="button">Clear Completed</button>
+        <button className="button" onClick={setAllCompletedTodos}>
+          Mark All Completed
+        </button>
+        <button className="button" onClick={removeCompletedTodos}>
+          Clear Completed
+        </button>
       </div>
 
       <RemainingTodos />
