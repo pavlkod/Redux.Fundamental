@@ -44,6 +44,11 @@ const todosSlice = createSlice({
       },
     },
     todoRemoved: todosAdapter.removeOne,
+    markAllCompleted(state, action) {
+      Object.values(state.entities).forEach((todo) => {
+        todo.completed = true
+      })
+    },
   },
   extraReducers(builder) {
     builder
@@ -60,7 +65,7 @@ const todosSlice = createSlice({
   },
 })
 
-export const { loading, todoToggled, todoRemoved, changeColor, todosAdded } =
+export const { todoToggled, todoRemoved, changeColor, markAllCompleted } =
   todosSlice.actions
 
 export const todosReducer = todosSlice.reducer
