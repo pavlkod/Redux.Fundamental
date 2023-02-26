@@ -65,9 +65,7 @@ const todosSlice = createSlice({
       .addCase(fetchTodos.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(addTodo.fulfilled, (state, action) => {
-        todosAdapter.addOne(state, action.payload)
-      })
+      .addCase(addTodo.fulfilled, todosAdapter.addOne)
   },
 })
 
@@ -80,27 +78,6 @@ export const {
 } = todosSlice.actions
 
 export const todosReducer = todosSlice.reducer
-/*
-    case COMPLETE_ALL_TODO: {
-      const newState = { ...state.entities }
-      Object.values(newState).forEach((todo) => {
-        newState[todo.id] = {
-          ...todo,
-          completed: true,
-        }
-      })
-      return { ...state, entities: newState }
-    }
-    case REMOVE_COMPLETED_TODO: {
-      // const newState = { ...state.entities }
-      const newState = Object.fromEntries(
-        Object.entries(state.entities).filter(
-          ([key, value]) => !value.completed
-        )
-      )
-      return { ...state, entities: newState }
-    }
-*/
 
 export const selectTodos = (state) => state.todos.entities
 
