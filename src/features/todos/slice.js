@@ -3,14 +3,15 @@ import { StatusFilters } from 'features/filters/slice'
 import { shallowEqual } from 'react-redux'
 import {
   createAsyncThunk,
+  createEntityAdapter,
   createSelector,
   createSlice,
 } from '@reduxjs/toolkit/'
 
-const initialState = {
+const todosAdapter = createEntityAdapter()
+const initialState = todosAdapter.getInitialState({
   status: 'idle',
-  entities: {},
-}
+})
 
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   const response = await client.get('/fakeApi/todos/')
@@ -26,13 +27,6 @@ const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    loading(state) {
-      state.status = 'loading'
-    },
-    todoAdded(state, action) {
-      const todo = action.payload
-      state.entities[todo.id] = todo
-    },
     todoToggled(state, action) {
       const todoId = action.payload
       const todo = state.entities[todoId]
@@ -49,46 +43,25 @@ const todosSlice = createSlice({
         }
       },
     },
-    todoRemoved(state, action) {
-      delete state.entities[action.payload]
-    },
-    todosAdded(state, action) {
-      const entitites = {}
-      action.payload.forEach((todo) => {
-        entitites[todo.id] = todo
-      })
-      state.entities = entitites
-      state.status = 'idle'
-    },
+    todoRemoved: todosAdapter.removeOne,
   },
   extraReducers(builder) {
     builder
       .addCase(fetchTodos.fulfilled, (state, action) => {
-        const entitites = {}
-        action.payload.forEach((todo) => {
-          entitites[todo.id] = todo
-        })
-        state.entities = entitites
+        todosAdapter.setAll(state, action.payload)
         state.status = 'idle'
       })
       .addCase(fetchTodos.pending, (state) => {
         state.status = 'loading'
       })
       .addCase(addTodo.fulfilled, (state, action) => {
-        const todo = action.payload
-        state.entities[todo.id] = todo
+        todosAdapter.addOne(state, action.payload)
       })
   },
 })
 
-export const {
-  loading,
-  todoAdded,
-  todoToggled,
-  todoRemoved,
-  changeColor,
-  todosAdded,
-} = todosSlice.actions
+export const { loading, todoToggled, todoRemoved, changeColor, todosAdded } =
+  todosSlice.actions
 
 export const todosReducer = todosSlice.reducer
 /*
