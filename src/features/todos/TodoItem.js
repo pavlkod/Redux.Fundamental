@@ -5,7 +5,7 @@ import { ReactComponent as TimesSolid } from './times-solid.svg'
 import { availableColors, capitalize } from '../filters/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { change_color, remove_todo, toggle_todo } from './actions'
-import { changeColor, selectTodoById, todoToggled } from './slice'
+import { changeColor, selectTodoById, todoRemoved, todoToggled } from './slice'
 
 const TodoListItem = ({ todoId }) => {
   const dispatch = useDispatch()
@@ -21,7 +21,7 @@ const TodoListItem = ({ todoId }) => {
   }
 
   const removeTodo = (e) => {
-    dispatch(remove_todo(todoId))
+    dispatch(todoRemoved(todoId))
   }
 
   const colorOptions = availableColors.map((c) => (
@@ -40,10 +40,7 @@ const TodoListItem = ({ todoId }) => {
             checked={completed}
             onChange={handleCompletedChanged}
           />
-          <div className="todo-text">
-            {text}
-            {Date.now()}
-          </div>
+          <div className="todo-text">{text}</div>
         </div>
         <div className="segment buttons">
           <select
