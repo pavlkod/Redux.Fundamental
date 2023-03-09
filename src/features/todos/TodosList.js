@@ -13,8 +13,6 @@ const TodosList = () => {
     dispatch(fetchTodos())
   }, [dispatch])
 
-  console.log(todoIds)
-
   if (status === 'loading') {
     return (
       <div className="todo-list">
